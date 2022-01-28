@@ -43,22 +43,22 @@ def distance():
     return distance
  
 if __name__ == '__main__':
-    GPIO.setup(Motor.Motor1,GPIO.OUT) # Left side as Outputs
-    GPIO.setup(Motor.Motor2,GPIO.OUT)
-    GPIO.setup(Motor.Motor3,GPIO.OUT)
-    GPIO.setup(Motor.Motor4,GPIO.OUT) # Right side as Outputs
-    GPIO.setup(Motor.Motor5,GPIO.OUT)
-    GPIO.setup(Motor.Motor6,GPIO.OUT)
+    #GPIO.setup(Motor.Motor1,GPIO.OUT) # Left side as Outputs
+    #GPIO.setup(Motor.Motor2,GPIO.OUT)
+    #GPIO.setup(Motor.Motor3,GPIO.OUT)
+    #GPIO.setup(Motor.Motor4,GPIO.OUT) # Right side as Outputs
+    #GPIO.setup(Motor.Motor5,GPIO.OUT)
+    #GPIO.setup(Motor.Motor6,GPIO.OUT)
     try:
         while True:
             print("Loop")
             dist = distance()
-            if(dist >50):
-                Motor.goForward()
-                time.sleep(5.0)
-            else:
-                Motor.goBackward()
-                time.sleep(5.0)
+            #if(dist >50):
+                #Motor.goForward()
+            #    time.sleep(5.0)
+            #else:
+                #Motor.goBackward()
+            #    time.sleep(5.0)
             print ("Measured Distance = %.1f cm" % dist)
             time.sleep(0.5)
  
