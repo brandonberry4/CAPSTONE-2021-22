@@ -41,8 +41,8 @@ def setup():
     #GPIO.output(Motor6,GPIO.LOW)
     
 def goForward():
-    p1.ChangeDutyCycle(75)
-    p2.ChangeDutyCycle(75)
+    p1.ChangeDutyCycle(100)
+    p2.ChangeDutyCycle(100)
     print("going forward")
     GPIO.output(Motor1,GPIO.HIGH)
     GPIO.output(Motor2,GPIO.LOW)
@@ -105,7 +105,7 @@ def stopRight():
 #     print("Stop")
 
 def turnLeft():
-    p2.ChangeDutyCycle(35)
+    p2.ChangeDutyCycle(20)
     print("Turning left")
     GPIO.output(Motor1,GPIO.LOW)
     GPIO.output(Motor2,GPIO.LOW)
@@ -115,7 +115,7 @@ def turnLeft():
     #GPIO.output(Motor6,GPIO.HIGH)
     
 def turnRight():
-    p1.ChangeDutyCycle(35)
+    p1.ChangeDutyCycle(20)
     print("Turning left")
     GPIO.output(Motor1,GPIO.HIGH)
     GPIO.output(Motor2,GPIO.LOW)
