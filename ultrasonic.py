@@ -1,22 +1,39 @@
-#Libraries
 import RPi.GPIO as GPIO
-import Motor
 import time
  
 #GPIO Mode (BOARD / BCM)
 GPIO.setmode(GPIO.BOARD)
+GPIO.setwarnings(False)
  
 #set GPIO Pins
-GPIO_TRIGGER = 7
-GPIO_ECHO = 11
+
+#left US 
+GPIO_TRIGGER1 = 31 # GPIO 22
+GPIO_ECHO1 = 29 # GPIO 21
+ 
+#right US
+GPIO_TRIGGER2 = 23 # GPIO 14
+GPIO_ECHO2 = 21 # GPIO 13
  
 #set GPIO direction (IN / OUT)
-GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
-GPIO.setup(GPIO_ECHO, GPIO.IN)
+GPIO.setup(TRIG, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.IN)
+GPIO.setup(TRIG1, GPIO.OUT)
+GPIO.setup(ECHO1, GPIO.IN)
+GPIO.output(TRIG, False)
+GPIO.output(TRIG1, False)
+
+GPIO.output(TRIG, True)
+time.sleep(0.00001)
+GPIO.output(TRIG, False)
+
+while GPIO.input(ECHO) == 0:
+    pulse_start = time.time()
+while GPIO.input(ECHO) == 1:
+    pulse_end = time.time()
  
 def distance():
     # set Trigger to HIGH
-    print("DISTANCE STARTS")
     GPIO.output(GPIO_TRIGGER, True)
  
     # set Trigger after 0.01ms to LOW
@@ -43,24 +60,11 @@ def distance():
     return distance
  
 if __name__ == '__main__':
-    #GPIO.setup(Motor.Motor1,GPIO.OUT) # Left side as Outputs
-    #GPIO.setup(Motor.Motor2,GPIO.OUT)
-    #GPIO.setup(Motor.Motor3,GPIO.OUT)
-    #GPIO.setup(Motor.Motor4,GPIO.OUT) # Right side as Outputs
-    #GPIO.setup(Motor.Motor5,GPIO.OUT)
-    #GPIO.setup(Motor.Motor6,GPIO.OUT)
     try:
         while True:
-            print("Loop")
             dist = distance()
-            #if(dist >50):
-                #Motor.goForward()
-            #    time.sleep(5.0)
-            #else:
-                #Motor.goBackward()
-            #    time.sleep(5.0)
             print ("Measured Distance = %.1f cm" % dist)
-            time.sleep(0.5)
+            time.sleep(1)
  
         # Reset by pressing CTRL + C
     except KeyboardInterrupt:
