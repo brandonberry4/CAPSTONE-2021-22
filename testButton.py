@@ -5,6 +5,8 @@ GPIO.setmode(GPIO.BOARD)
 import time
 import os
 import testIR
+import ultrasonic2
+import Motor
 
 count = 0
 button = Button(27, None, True) #pin 36 GPIO 27
@@ -19,7 +21,10 @@ while True:
         time.sleep(0.3)
         count = count + 1   
     if count == 1:
+        time.sleep(3)
         print("Robot running")
+        Motor.StartMoving()
+        #ultrasonic2.distance1()
         testIR.trackLine()
         break
     elif count == 2:
