@@ -21,7 +21,8 @@ def distance1():
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
     GPIO.output(TRIG, False)
-
+    print("Checking distance")
+    
     while GPIO.input(ECHO1) == 0:
         pulse_start = time.time()
     while GPIO.input(ECHO1) == 1:

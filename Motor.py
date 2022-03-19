@@ -62,7 +62,19 @@ def StartMoving():
     GPIO.output(Motor4,GPIO.LOW)
     GPIO.output(Motor5,GPIO.HIGH)
     GPIO.output(Motor6,GPIO.HIGH)
-    sleep(2)
+    sleep(1.5)
+    
+def TurnAround():
+    p1.ChangeDutyCycle(100)
+    p2.ChangeDutyCycle(100)
+    print("Turn Around")
+    GPIO.output(Motor1,GPIO.HIGH)
+    GPIO.output(Motor2,GPIO.LOW)
+    GPIO.output(Motor3,GPIO.HIGH)
+    GPIO.output(Motor4,GPIO.LOW)
+    GPIO.output(Motor5,GPIO.HIGH)
+    GPIO.output(Motor6,GPIO.HIGH)
+    sleep(3)
     
     
 def goForward():
@@ -78,6 +90,8 @@ def goForward():
     print ("Forward")
     
 def goBackward():
+    p1.ChangeDutyCycle(50)
+    p2.ChangeDutyCycle(50)
     print("going backward")
     GPIO.output(Motor1,GPIO.LOW)
     GPIO.output(Motor2,GPIO.HIGH)
@@ -85,6 +99,7 @@ def goBackward():
     GPIO.output(Motor4,GPIO.LOW)
     GPIO.output(Motor5,GPIO.HIGH)
     GPIO.output(Motor6,GPIO.HIGH)
+    sleep(5)
     print ("Reverse")
     
 def fullStop():
