@@ -1,115 +1,141 @@
 import RPi.GPIO as GPIO
-import os, signal
+import time
+import datetime
+import csv
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
-from time import sleep, time
+trig = 13
+echo = 15
 
-# Private Attributes
-__CALIBRATE      = "1"
-__TEST           = "2"
-__FILTER         = "3"
-__QUIT           = "q"
+print('setting up the pins')
+#GPIO.cleanup()
 
-class UltraSonic():
-    # Ultrasonic sensor class 
+GPIO.setmode(GPIO.BOARD)
+GPIO.setwarnings(False)
+GPIO.setup(trig,GPIO.OUT)
+GPIO.setup(echo,GPIO.IN)
 
-    def __init__(self, TRIG, ECHO, offset = 0.5):
-        # Create a new sensor instance
-        self.TRIG = TRIG
-        self.ECHO = ECHO
-        self.offset = offset                             # Sensor calibration factor
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.TRIG, GPIO.OUT)                  # Set pin as GPIO output
-        GPIO.setup(self.ECHO, GPIO.IN)                   # Set pin as GPIO input
+# Create figure for plotting
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
 
-    def __str__(self):
-        # Return string representation of sensor
-        return "Ultrasonic Sensor: TRIG - {0}, ECHO - {1}, Offset: {2} cm".format(self.TRIG, self.ECHO, self.offset)
+xs = []
+sensor_reading = []
+k_estimated = []
+k_uncertainity = []
 
-    def ping(self):
-        # Get distance measurement
-        GPIO.output(self.TRIG, GPIO.LOW)                 # Set TRIG LOW
-        sleep(0.1)                                       # Min gap between measurements        
-        # Create 10 us pulse on TRIG
-        GPIO.output(self.TRIG, GPIO.HIGH)                # Set TRIG HIGH
-        sleep(0.00001)                                   # Delay 10 us
-        GPIO.output(self.TRIG, GPIO.LOW)                 # Set TRIG LOW
-        # Measure return echo pulse duration
-        while GPIO.input(self.ECHO) == GPIO.LOW:         # Wait until ECHO is LOW
-            pulse_start = time()                         # Save pulse start time
+file_name = 'ultrasonic_kalman_data.csv'
 
-        while GPIO.input(self.ECHO) == GPIO.HIGH:        # Wait until ECHO is HIGH
-            pulse_end = time()                           # Save pulse end time
+with open(file_name, 'a') as header:
+    csvwriter = csv.writer(header)
+    csvwriter.writerow(['Ultrasonic sensor data','Kalman filter estimation','Uncertainity'])
+        
+# initialization for kalman filters
+x = np.matrix([[0.]])      # initial distance estimate
+p = np.matrix([[1000.]])   # initial uncertainity
 
-        pulse_duration = pulse_end - pulse_start 
-        # Distance = 17160.5 * Time (unit cm) at sea level and 20C
-        distance = pulse_duration * 17160.5              # Calculate distance
-        distance = round(distance, 2)                    # Round to two decimal points
-
-        if distance > 2 and distance < 400:              # Check distance is in sensor range
-            distance = distance + self.offset
-            print("Distance: ", distance," cm")
-        else:
-            distance = 0
-            print("No obstacle")                         # Nothing detected by sensor
-        return distance
-
-    def calibrate(self):
-        # Calibrate sensor distance measurement
-        while True:
-            self.ping()
-            response = input("Enter Offset (q = quit): ")
-            if response == __QUIT:
-                break;
-            sensor.offset = float(response)
-            print(sensor)
-
-    @staticmethod
-    def low_pass_filter(value, previous_value, beta):
-        # Simple infinite-impulse-response (IIR) single-pole low-pass filter.
-        # ß = discrete-time smoothing parameter (determines smoothness). 0 < ß < 1
-        # LPF: Y(n) = (1-ß)*Y(n-1) + (ß*X(n))) = Y(n-1) - (ß*(Y(n-1)-X(n)))
-        smooth_value = previous_value - (beta * (previous_value - value))
-        return smooth_value
+u = np.matrix([[0.]])
+w = np.matrix([[0.]])
+A = np.matrix([[1.]])
+B = np.matrix([[0.]])
+H = np.matrix([[1.]])
+Q = np.matrix([[0.00001]])
+R = np.matrix([[0.10071589]])
 
 
-def main():
-    sensor = UltraSonic(8, 7)       # create a new sensor instance on GPIO pins 7 & 8
-    print(sensor)
+# True distance if distance is fixed
+true_distance = []
 
-    def endProcess(signum = None, frame = None):
-        # Called on process termination. 
-        if signum is not None:
-            SIGNAL_NAMES_DICT = dict((getattr(signal, n), n) for n in dir(signal) if n.startswith('SIG') and '_' not in n )
-            print("signal {} received by process with PID {}".format(SIGNAL_NAMES_DICT[signum], os.getpid()))
-        print("\n-- Terminating program --")
-        print("Cleaning up GPIO...")
-        GPIO.cleanup()
-        print("Done.")
-        exit(0)
+def kalman(x_,p_,x_measured):
+    # prediction
+    x_predicted = A*x_ + B*u + w
+    p_predicted = A*p_*np.transpose(A) + Q
 
-    # Assign handler for process exit
-    signal.signal(signal.SIGTERM, endProcess)
-    signal.signal(signal.SIGINT, endProcess)
-    signal.signal(signal.SIGHUP, endProcess)
-    signal.signal(signal.SIGQUIT, endProcess)
+    # measurement update
+    y = x_measured - (H*x_predicted)
 
-    while True:
-        action = input("\nSelect Action - (1) Calibrate, (2) Test, or (3) Filter: ")
+    # kalman estimation   
+    s = H*p_predicted*np.transpose(H) + R
+    K = p_predicted*np.transpose(H)*np.linalg.inv(s)
 
-        if action == __CALIBRATE:
-            sensor.calibrate()
-        elif action == __FILTER:
-            beta = input("Enter Beta 0 < ß < 1 (q = quit): ")
-            filtered_value = 0
-            if beta == __QUIT:
-                break;
-            while True:
-                filtered_value = sensor.low_pass_filter(sensor.ping(), filtered_value, float(beta))
-                filtered_value = round(filtered_value, 2)
-                print("Filtered: ", filtered_value, " cm")
-        else:
-            sensor.ping()
+    x_estimated = x_predicted + (K*y)
+    p_estimated = (1 - (K*H))*p_predicted
 
-if __name__ == "__main__":
-    # execute only if run as a script
-    main()
+    return x_estimated, p_estimated
+
+def measure(k, xs, sensor_reading, k_estimated, true_distance):
+    global x, p
+    GPIO.output(trig,False)
+    #print('Waiting for the sensors to settle')
+    time.sleep(1)
+
+    GPIO.output(trig,True)
+    time.sleep(0.00001)
+    GPIO.output(trig,False)
+
+    while(GPIO.input(echo)==0):
+        pulse_start = time.time()
+
+    while(GPIO.input(echo)==1):
+        pulse_end = time.time()
+
+    pulse = pulse_end - pulse_start
+    distance = round(pulse * 17150,5)
+
+    xs.append(k)    
+    sensor_reading.append(distance)
+    '''
+    if k <= 15:
+        true_distance.append(10)
+    if k>15 and k<=30:
+        true_distance.append(12)
+    if k>30:
+        true_distance.append(20)
+    '''
+    true_distance.append(10)
+    
+    x, p = kalman(x,p,distance)
+
+    k_estimated.append(x.item(0))
+    k_uncertainity.append(p)
+    
+    with open(file_name, 'a') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow([distance,x.item(0),p.item(0)])
+
+    # Limit x and y lists to 20 items
+    xs = xs[-20:]
+    sensor_reading = sensor_reading[-20:]
+    true_distance = true_distance[-20:]
+    k_estimated = k_estimated[-20:]
+
+    # Draw x and y lists
+    ax.clear()
+    ax.plot(xs, sensor_reading, label='Sensor data')
+    ax.plot(xs, k_estimated, 'tab:red', label='kalman estimation')
+    ax.plot(xs, true_distance, 'tab:orange', label='True distance')
+
+    #legend = ax.legend(loc='upper center', shadow=True, fontsize='x-large')
+    ax.legend()
+
+    '''if k == 14 or k == 29:
+        print('Distance changed')
+    '''    
+    # Format plot
+    #plt.xticks(rotation=45, ha='right')
+    plt.subplots_adjust(bottom=0.30)
+    plt.title('Kalman filter data estimation of HCSR04')
+    plt.ylabel('Distance (cms)')
+    print('Distance from sensor: ',distance,' cms')
+    print('kalman estimated distance: ',x.item(0),' cms')
+    
+
+try:
+    ani = animation.FuncAnimation(fig, measure, fargs=(xs, sensor_reading, k_estimated, true_distance), interval=2000)
+    plt.show()
+    
+except KeyboardInterrupt:
+    print('Cleaning up')
+    GPIO.cleanup()
