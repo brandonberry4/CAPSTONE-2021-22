@@ -3,63 +3,75 @@ import time
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
-TRIG = 33
+TRIG = 40
 #TRIG2 = 23
-ECHO1 = 31
+ECHO = 38
 #ECHO2 = 29
+maxTime = 0.02
+total = 0
+count = 0
+distance = 0
+avg = 0
+dist = []
+distList = []
+scan = False
 
-print ("Setup")
+print ("US Setup")
 GPIO.setup(TRIG, GPIO.OUT)
 #GPIO.setup(TRIG2, GPIO.OUT)
-GPIO.setup(ECHO1, GPIO.IN)
+GPIO.setup(ECHO, GPIO.IN)
 #GPIO.setup(ECHO2, GPIO.IN)
 GPIO.output(TRIG, False)
 #GPIO.output(TRIG2, False)
 
-def distance1():
-    print("In dist1")
-    GPIO.output(TRIG, True)
-    time.sleep(0.00001)
-    GPIO.output(TRIG, False)
-    print("Checking distance")
+def distance():
+    hist = []
     
-    while GPIO.input(ECHO1) == 0:
-        pulse_start = time.time()
-    while GPIO.input(ECHO1) == 1:
-        pulse_end = time.time()
-        
-    pulse_duration = pulse_end - pulse_start
-    distance = pulse_duration * 17150
-    distance = round(distance, 2)
-    
-    return distance
-    
-    print("out dist1")
+    starttime = time.time()
+    for i in range(10):
+        GPIO.output(TRIG, True)
+        time.sleep(0.00001)
+        GPIO.output(TRIG, False)
 
-# def distance2():
-#     print("In dist2")
-#     GPIO.output(TRIG, True)
-#     time.sleep(0.00001)
-#     GPIO.output(TRIG, False)
-# 
-#     while GPIO.input(ECHO2) == 0:
-#         pulse_start = time.time()
-#     while GPIO.input(ECHO2) == 1:
-#         pulse_end = time.time()
-#         
-#     pulse_duration = pulse_end - pulse_start
-#     distance = pulse_duration * 17150
-#     distance = round(distance, 2)
-    
-    return distance
+        pulse_start = time.time()
+        timeout = pulse_start + maxTime
+        while GPIO.input(ECHO) == 0 and pulse_start < timeout:
+            pulse_start = time.time()
+        pulse_end = time.time()
+        timeout = pulse_end + maxTime
+        while GPIO.input(ECHO) == 1 and pulse_start < timeout:
+            pulse_end = time.time()
+        
+
+        pulse_duration = pulse_end - pulse_start
+        distance = pulse_duration * 17150
+        distance = round(distance, 2)
+        hist.append(distance)
+        
+    validcount = 0
+    total = 0
+    print(hist)
+    for i in hist:
+        if i < 130:
+            validcount += 1
+            total += 1
+        if validcount > 1:
+            avg_dist = round(total/validcount, 2)
+            if avg_dist <= 50:
+                return ([avg_dist, True, avg_dist, avg_dist])
+            else:
+                return ([avg_dist, False, avg_dist, avg_dist]) 
+        avg_temp = 0
+        for i in range(10):
+            avg_temp += hist[i]
+        return avg_temp/10
+        
     
 if __name__ == '__main__':
     try:
         while True:
-            dist1 = distance1()
-#             dist2 = distance2()
-            print ("Measured Distance 1 = %.1f cm" % dist1)
-#             print ("Measured Distance 2 = %.1f cm" % dist2)
+            dist = distance()
+            print ("Average Distance = %.1f cm" % dist)
             time.sleep(0.5)
  
         # Reset by pressing CTRL + C

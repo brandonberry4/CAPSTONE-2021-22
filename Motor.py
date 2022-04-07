@@ -4,7 +4,7 @@ GPIO.setmode(GPIO.BOARD)
 # Pins for Motor Driver Inputs
 # Left side
 Motor1 = 11 #input
-Motor2 = 13 #input
+Motor2 = 29 #input
 Motor3 = 15 #enable
 
 GPIO.setup(Motor3,GPIO.OUT)
@@ -30,7 +30,7 @@ def setup():
     GPIO.setup(Motor4,GPIO.OUT) # Right side as Outputs
     GPIO.setup(Motor5,GPIO.OUT)
     GPIO.setup(Motor6,GPIO.OUT)
-    print ("Setup")
+    print ("Motor Setup")
     sleep(1)
     print("Wait")
     GPIO.output(Motor1,GPIO.LOW)
@@ -42,8 +42,8 @@ def setup():
     
 def StartMoving():
     print("Moving forward")
-    p1.ChangeDutyCycle(70)
-    p2.ChangeDutyCycle(70)
+    p1.ChangeDutyCycle(30)
+    p2.ChangeDutyCycle(30)
     GPIO.output(Motor1,GPIO.HIGH)
     GPIO.output(Motor2,GPIO.LOW)
     GPIO.output(Motor3,GPIO.HIGH)
@@ -51,10 +51,10 @@ def StartMoving():
     GPIO.output(Motor5,GPIO.LOW)
     GPIO.output(Motor6,GPIO.HIGH)
     print ("Forward")
-    sleep(2.5)
+    sleep(2)
     
-    p1.ChangeDutyCycle(100)
-    p2.ChangeDutyCycle(100)
+    p1.ChangeDutyCycle(60)
+    p2.ChangeDutyCycle(60)
     print("Pivot Right")
     GPIO.output(Motor1,GPIO.HIGH)
     GPIO.output(Motor2,GPIO.LOW)
@@ -62,11 +62,14 @@ def StartMoving():
     GPIO.output(Motor4,GPIO.LOW)
     GPIO.output(Motor5,GPIO.HIGH)
     GPIO.output(Motor6,GPIO.HIGH)
-    sleep(1.5)
+    sleep(1.2)
     
 def TurnAround():
-    p1.ChangeDutyCycle(100)
-    p2.ChangeDutyCycle(100)
+    #p1.ChangeDutyCycle(20)
+    #p2.ChangeDutyCycle(20)
+    #sleep(0.3)
+    p1.ChangeDutyCycle(50)
+    p2.ChangeDutyCycle(50)
     print("Turn Around")
     GPIO.output(Motor1,GPIO.HIGH)
     GPIO.output(Motor2,GPIO.LOW)
@@ -74,12 +77,15 @@ def TurnAround():
     GPIO.output(Motor4,GPIO.LOW)
     GPIO.output(Motor5,GPIO.HIGH)
     GPIO.output(Motor6,GPIO.HIGH)
-    sleep(3)
+    sleep(2)
     
     
 def goForward():
-    p1.ChangeDutyCycle(90)
-    p2.ChangeDutyCycle(90)
+    #p1.ChangeDutyCycle(10)
+    #p2.ChangeDutyCycle(10)
+    #sleep(0.3)
+    p1.ChangeDutyCycle(25)
+    p2.ChangeDutyCycle(25)
     print("going forward")
     GPIO.output(Motor1,GPIO.HIGH)
     GPIO.output(Motor2,GPIO.LOW)
@@ -90,8 +96,11 @@ def goForward():
     print ("Forward")
     
 def goBackward():
-    p1.ChangeDutyCycle(50)
-    p2.ChangeDutyCycle(50)
+    #p1.ChangeDutyCycle(10)
+    #p2.ChangeDutyCycle(10)
+    #sleep(0.3)
+    p1.ChangeDutyCycle(25)
+    p2.ChangeDutyCycle(25)
     print("going backward")
     GPIO.output(Motor1,GPIO.LOW)
     GPIO.output(Motor2,GPIO.HIGH)
@@ -99,7 +108,7 @@ def goBackward():
     GPIO.output(Motor4,GPIO.LOW)
     GPIO.output(Motor5,GPIO.HIGH)
     GPIO.output(Motor6,GPIO.HIGH)
-    sleep(5)
+    sleep(1)
     print ("Reverse")
     
 def fullStop():
@@ -145,7 +154,7 @@ def stopRight():
 #     print("Stop")
 
 def turnLeft():
-    p2.ChangeDutyCycle(70)
+    p2.ChangeDutyCycle(30)
     print("Turning left")
     GPIO.output(Motor1,GPIO.LOW)
     GPIO.output(Motor2,GPIO.LOW)
@@ -155,7 +164,7 @@ def turnLeft():
     GPIO.output(Motor6,GPIO.HIGH)
     
 def turnRight():
-    p1.ChangeDutyCycle(70)
+    p1.ChangeDutyCycle(30)
     print("Turning right")
     GPIO.output(Motor1,GPIO.HIGH)
     GPIO.output(Motor2,GPIO.LOW)
@@ -163,6 +172,74 @@ def turnRight():
     GPIO.output(Motor4,GPIO.LOW)
     GPIO.output(Motor5,GPIO.LOW)
     GPIO.output(Motor6,GPIO.LOW)
+    
+def pushMarsh():
+    p1.ChangeDutyCycle(25)
+    p2.ChangeDutyCycle(25)
+    print("Pushing Marshmallow")
+    GPIO.output(Motor1,GPIO.HIGH)
+    GPIO.output(Motor2,GPIO.LOW)
+    GPIO.output(Motor3,GPIO.HIGH)
+    GPIO.output(Motor4,GPIO.HIGH)
+    GPIO.output(Motor5,GPIO.LOW)
+    GPIO.output(Motor6,GPIO.HIGH)
+    sleep(0.5)
+    GPIO.output(Motor1,GPIO.HIGH)
+    GPIO.output(Motor2,GPIO.LOW)
+    GPIO.output(Motor3,GPIO.HIGH)
+    GPIO.output(Motor4,GPIO.LOW)
+    GPIO.output(Motor5,GPIO.LOW)
+    GPIO.output(Motor6,GPIO.LOW)
+    sleep(0.7)
+    GPIO.output(Motor1,GPIO.HIGH)
+    GPIO.output(Motor2,GPIO.LOW)
+    GPIO.output(Motor3,GPIO.HIGH)
+    GPIO.output(Motor4,GPIO.HIGH)
+    GPIO.output(Motor5,GPIO.LOW)
+    GPIO.output(Motor6,GPIO.HIGH)
+    sleep(0.8)
+    GPIO.output(Motor1,GPIO.LOW)
+    GPIO.output(Motor2,GPIO.HIGH)
+    GPIO.output(Motor3,GPIO.HIGH)
+    GPIO.output(Motor4,GPIO.LOW)
+    GPIO.output(Motor5,GPIO.HIGH)
+    GPIO.output(Motor6,GPIO.HIGH)
+    sleep(0.8)
+    GPIO.output(Motor1,GPIO.LOW)
+    GPIO.output(Motor2,GPIO.LOW)
+    GPIO.output(Motor3,GPIO.LOW)
+    GPIO.output(Motor4,GPIO.HIGH)
+    GPIO.output(Motor5,GPIO.LOW)
+    GPIO.output(Motor6,GPIO.HIGH)
+    sleep(0.7)
+    
+def goHome():
+    p1.ChangeDutyCycle(60)
+    p2.ChangeDutyCycle(60)
+    print("Pivot Left")
+    GPIO.output(Motor1,GPIO.LOW)
+    GPIO.output(Motor2,GPIO.HIGH)
+    GPIO.output(Motor3,GPIO.HIGH)
+    GPIO.output(Motor4,GPIO.HIGH)
+    GPIO.output(Motor5,GPIO.LOW)
+    GPIO.output(Motor6,GPIO.HIGH)
+    sleep(1.2)
+    
+    print("Moving backwards")
+    p1.ChangeDutyCycle(30)
+    p2.ChangeDutyCycle(30)
+    GPIO.output(Motor1,GPIO.LOW)
+    GPIO.output(Motor2,GPIO.HIGH)
+    GPIO.output(Motor3,GPIO.HIGH)
+    GPIO.output(Motor4,GPIO.LOW)
+    GPIO.output(Motor5,GPIO.HIGH)
+    GPIO.output(Motor6,GPIO.HIGH)
+    print ("Back")
+    sleep(2)
+    
+    
+    
+    
     
 def destroy():
     GPIO.cleanup()

@@ -6,6 +6,7 @@ import time
 import os
 import testIR
 import ultrasonic2
+import ultrasonic
 import Motor
 
 count = 0
@@ -19,16 +20,27 @@ while True:
         time.sleep(0.3)
         count = count + 1   
     if count == 1:
-        time.sleep(1)
+        time.sleep(3)
         print("Robot running")
-        #Motor.StartMoving() #Starts driving forward from begining
-        #testIR.trackLine()  #Turns on line tracking to move down course
+        if ultrasonic2.distance1() < 120:
+            Motor.StartMoving() #Starts driving forward from begining
+            testIR.trackLine()  #Turns on line tracking to move down course
+            time.sleep(1)
+        Motor.pushMarsh()
+        testIR.trackLine()
         #Motor.goBackward()  #Once at end of course back up to get more room
-        Motor.goForward()
         #Motor.TurnAround()  #Turns around
         #testIR.trackLine()  #Line track back to beginning
-        break
+        if ultrasonic2.distance1() < 20:
+            testIR.trackLineRev()
+        Motor.goHome()
+#         while True:
+#             #ultrasonic2.distance1()
+#             ultrasonic.distance1()
+#         break
     elif count == 2:
         print("Stopping")
         quit()
-        #os.system("sudo shutdown -h now") 
+        #os.system("sudo shutdown -h now")
+        
+        

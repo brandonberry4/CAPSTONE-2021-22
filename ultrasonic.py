@@ -1,37 +1,85 @@
 import RPi.GPIO as GPIO
 import time
-
-GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
-TRIG = 33
-ECHO = 31
+GPIO.setwarnings(False)
+
+TRIG = 40
+#TRIG2 = 23
+ECHO = 38
+#ECHO2 = 29
+maxTime = 0.02
+total = 0
+count = 0
+distance = 0
+avg = 0
+dist = []
+distList = []
+scan = False
+
+print ("Setup")
 GPIO.setup(TRIG, GPIO.OUT)
+#GPIO.setup(TRIG2, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
+#GPIO.setup(ECHO2, GPIO.IN)
+GPIO.output(TRIG, False)
+#GPIO.output(TRIG2, False)
 
-def distance():
-    GPIO.output(TRIG, True)
-    time.sleep(0.00001)
-    GPIO.output(TRIG, False)
+def distance1():
+    hist = []
     
-    StartTime = time.time()
-    StopTime = time.time()
-    
-    while GPIO.input(ECHO) == 0:
-        StartTime = time.time()
-    while GPIO.input(ECHO) == 1:
-        StopTime = time.time()
+    starttime = time.time()
+    for i in range(10):
+        GPIO.output(TRIG, True)
+        time.sleep(0.00001)
+        GPIO.output(TRIG, False)
+
+        pulse_start = time.time()
+        timeout = pulse_start + maxTime
+        while GPIO.input(ECHO) == 0 and pulse_start < timeout:
+            pulse_start = time.time()
+        pulse_end = time.time()
+        timeout = pulse_end + maxTime
+        while GPIO.input(ECHO) == 1 and pulse_start < timeout:
+            pulse_end = time.time()
         
-    TimeElapsed = StopTime - StartTime
-    distance = (TimeElapsed * 34300) / 2
-    return distance
 
+        pulse_duration = pulse_end - pulse_start
+        distance = pulse_duration * 17150
+        distance = round(distance, 2)
+        hist.append(distance)
+        
+    validcount = 0
+    total = 0
+    print(hist)
+    for i in hist:
+        if i < 130:
+            validcount += 1
+            total += 1
+        if validcount > 1:
+            avg_dist = round(total/validcount, 2)
+            if avg_dist <= 50:
+                return ([avg_dist, True, avg_dist, avg_dist, ])
+            else:
+                return ([avg_dist, False, avg_dist, avg_dist]) 
+        avg_temp = 0
+        for i in range(10):
+            avg_temp += hist[i]
+        return avg_temp/10
+        #return distance
+        
+    
 if __name__ == '__main__':
     try:
         while True:
-            dist = distance()
-            int lastReads
-            print ("Measured Distance = %.1f cm" % dist)
+            dist1 = distance1()
+#             dist2 = distance2()
+            print ("Average Distance 1 = %.1f cm" % dist1)
+#             print ("Measured Distance 2 = %.1f cm" % dist2)
             time.sleep(0.5)
+ 
+        # Reset by pressing CTRL + C
     except KeyboardInterrupt:
-        print("Stopped")
+        print("Measurement stopped by User")
         GPIO.cleanup()
+
+                    
