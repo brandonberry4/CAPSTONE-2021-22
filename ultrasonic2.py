@@ -4,9 +4,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
 TRIG = 40
-#TRIG2 = 23
 ECHO = 38
-#ECHO2 = 29
 maxTime = 0.02
 total = 0
 count = 0
@@ -18,11 +16,8 @@ scan = False
 
 print ("US Setup")
 GPIO.setup(TRIG, GPIO.OUT)
-#GPIO.setup(TRIG2, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
-#GPIO.setup(ECHO2, GPIO.IN)
 GPIO.output(TRIG, False)
-#GPIO.output(TRIG2, False)
 
 def distance():
     hist = []

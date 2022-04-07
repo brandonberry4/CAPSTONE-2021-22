@@ -28,16 +28,12 @@ while True:
             time.sleep(1)
         Motor.pushMarsh()
         testIR.trackLine()
-        #Motor.goBackward()  #Once at end of course back up to get more room
-        #Motor.TurnAround()  #Turns around
-        #testIR.trackLine()  #Line track back to beginning
+        Motor.goBackward()  #Once at end of course back up to get more room
+        Motor.TurnAround()  #Turns around
+        testIR.trackLine()  #Line track back to beginning
         if ultrasonic2.distance1() < 20:
             testIR.trackLineRev()
         Motor.goHome()
-#         while True:
-#             #ultrasonic2.distance1()
-#             ultrasonic.distance1()
-#         break
     elif count == 2:
         print("Stopping")
         quit()
