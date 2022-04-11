@@ -22,18 +22,19 @@ while True:
     if count == 1:
         time.sleep(3)
         print("Robot running")
-        if ultrasonic2.distance1() < 120:
-            Motor.StartMoving() #Starts driving forward from begining
-            testIR.trackLine()  #Turns on line tracking to move down course
-            time.sleep(1)
-        Motor.pushMarsh()
         testIR.trackLine()
-        Motor.goBackward()  #Once at end of course back up to get more room
-        Motor.TurnAround()  #Turns around
-        testIR.trackLine()  #Line track back to beginning
-        if ultrasonic2.distance1() < 20:
-            testIR.trackLineRev()
-        Motor.goHome()
+        #if ultrasonic2.distance() < 120:
+        #    Motor.StartMoving() #Starts driving forward from begining
+        #    testIR.trackLine()  #Turns on line tracking to move down course
+        #    time.sleep(1)
+        #Motor.pushMarsh()
+        #testIR.trackLine()
+        #Motor.goBackward()  #Once at end of course back up to get more room
+        #Motor.TurnAround()  #Turns around
+        #testIR.trackLine()  #Line track back to beginning
+        #if ultrasonic2.distance1() < 20:
+        #    testIR.trackLineRev()
+        #Motor.goHome()
     elif count == 2:
         print("Stopping")
         quit()
