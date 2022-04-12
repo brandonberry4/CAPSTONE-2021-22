@@ -1,22 +1,23 @@
 import RPi.GPIO as GPIO
 from time import sleep
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 # Pins for Motor Driver Inputs
 # Left side
-Motor1 = 11 #input
-Motor2 = 29 #input
-Motor3 = 15 #enable
+Motor1 = 17 #input 11
+Motor2 = 27 #input 13
+Motor3 = 22 #enable 15
 
 GPIO.setup(Motor3,GPIO.OUT)
-p1 = GPIO.PWM(15, 100)
+p1 = GPIO.PWM(22, 100)
 
 # Right side
-Motor4 = 16 #input
-Motor5 = 18 #input
-Motor6 = 22 #enable
+Motor4 = 23 #input 16
+Motor5 = 24 #input 18
+Motor6 = 25 #enable 22
 
 GPIO.setup(Motor6,GPIO.OUT)
-p2 = GPIO.PWM(22, 100)
+p2 = GPIO.PWM(25, 100)
 
 p1.start(0)
 p2.start(0)

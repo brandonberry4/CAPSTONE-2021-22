@@ -1,11 +1,11 @@
 from gpiozero import Button
 import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 import time
 import os
 import Infrared
-import Ultrasonic
+#import Ultrasonic
 import Motor
 
 count = 0
@@ -21,7 +21,7 @@ while True:
     if count == 1:
         time.sleep(3)
         print("Robot running")
-        testIR.trackLine()
+        Infrared.trackLine()
         #if Ultrasonic.distance() < 120:
         #    Motor.StartMoving() #Starts driving forward from begining
         #    Infrared.trackLine()  #Turns on line tracking to move down course

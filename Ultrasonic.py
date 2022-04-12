@@ -1,10 +1,10 @@
 import RPi.GPIO as GPIO
 import time
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-TRIG = 40
-ECHO = 38
+TRIG = 21 #Board 40
+ECHO = 20 #Board 38
 maxTime = 0.02
 total = 0
 count = 0
