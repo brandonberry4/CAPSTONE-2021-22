@@ -4,9 +4,8 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 import time
 import os
-import testIR
-import ultrasonic2
-import ultrasonic
+import Infrared
+import Ultrasonic
 import Motor
 
 count = 0
@@ -23,17 +22,17 @@ while True:
         time.sleep(3)
         print("Robot running")
         testIR.trackLine()
-        #if ultrasonic2.distance() < 120:
+        #if Ultrasonic.distance() < 120:
         #    Motor.StartMoving() #Starts driving forward from begining
-        #    testIR.trackLine()  #Turns on line tracking to move down course
+        #    Infrared.trackLine()  #Turns on line tracking to move down course
         #    time.sleep(1)
         #Motor.pushMarsh()
-        #testIR.trackLine()
+        #Infrared.trackLine()
         #Motor.goBackward()  #Once at end of course back up to get more room
         #Motor.TurnAround()  #Turns around
-        #testIR.trackLine()  #Line track back to beginning
-        #if ultrasonic2.distance1() < 20:
-        #    testIR.trackLineRev()
+        #Infrared.trackLine()  #Line track back to beginning
+        #if Ultrasonic.distance1() < 20:
+        #    Infrared.trackLineRev()
         #Motor.goHome()
     elif count == 2:
         print("Stopping")
