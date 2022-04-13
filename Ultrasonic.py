@@ -60,6 +60,9 @@ def distance():
         for i in range(10):
             avg_temp += hist[i]
         return avg_temp/10
+
+#dist = distance()
+#print ("Average Distance = %.1f cm" % dist)
         
     
 if __name__ == '__main__':

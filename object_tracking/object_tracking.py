@@ -27,15 +27,16 @@ import time
 from threading import Thread
 
 import sys
-sys.path.insert(0, '/var/www/html/earthrover')
+sys.path.insert(0, '/home/pi/Desktop/Capstone/CAPSTONE-2021-22')
 import util as ut
 ut.init_gpio()
 
 cap = cv2.VideoCapture(0)
 threshold=0.2
-top_k=5 #number of objects to be shown as detected
+top_k=2 #number of objects to be shown as detected
 
-model_dir = '/var/www/html/all_models'
+
+model_dir = '/home/pi/Desktop/Capstone/CAPSTONE-2021-22/all_models'
 model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite'
 model_edgetpu = 'mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite'
 lbl = 'coco_labels.txt'
@@ -45,7 +46,7 @@ x_deviation=0
 y_deviation=0
 arr_track_data=[0,0,0,0,0,0]
 
-arr_valid_objects=['apple', 'sports ball', 'frisbee', 'orange', 'mouse', 'vase', 'banana' ]
+arr_valid_objects=['cup', 'tape', 'ball', 'book']
 
 #---------Flask----------------------------------------
 from flask import Flask, Response
@@ -69,21 +70,21 @@ def video_feed():
 
 #-----initialise motor speed-----------------------------------
 
-import RPi.GPIO as GPIO 
-GPIO.setmode(GPIO.BCM)  # choose BCM numbering scheme  
-      
-GPIO.setup(20, GPIO.OUT)# set GPIO 20 as output pin
-GPIO.setup(21, GPIO.OUT)# set GPIO 21 as output pin
-      
-pin20 = GPIO.PWM(20, 100)    # create object pin20 for PWM on port 20 at 100 Hertz  
-pin21 = GPIO.PWM(21, 100)    # create object pin21 for PWM on port 21 at 100 Hertz  
-
-#set speed to maximum value
-val=100
-pin20.start(val)              # start pin20 on 0 percent duty cycle (off)  
-pin21.start(val)              # start pin21 on 0 percent duty cycle (off)  
-    
-print("speed set to: ", val)
+#import RPi.GPIO as GPIO 
+#GPIO.setmode(GPIO.BCM)  # choose BCM numbering scheme  
+#      
+#GPIO.setup(20, GPIO.OUT)# set GPIO 20 as output pin
+#GPIO.setup(21, GPIO.OUT)# set GPIO 21 as output pin
+#      
+#pin20 = GPIO.PWM(20, 100)    # create object pin20 for PWM on port 20 at 100 Hertz  
+#pin21 = GPIO.PWM(21, 100)    # create object pin21 for PWM on port 21 at 100 Hertz  
+#
+##set speed to maximum value
+#val=100
+#pin20.start(val)              # start pin20 on 0 percent duty cycle (off)  
+#pin21.start(val)              # start pin21 on 0 percent duty cycle (off)  
+#    
+#print("speed set to: ", val)
 #---------------------------------------------------------------
 
     
@@ -96,7 +97,6 @@ def track_object(objs,labels):
     if(len(objs)==0):
         print("no objects to track")
         ut.stop()
-        ut.red_light("OFF")
         arr_track_data=[0,0,0,0,0,0]
         return
 
