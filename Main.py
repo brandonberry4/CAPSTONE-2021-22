@@ -6,6 +6,7 @@ import os
 import Infrared
 import Ultrasonic
 import Motor
+#from object_tracking import object_tracking
 
 count = 0
 GPIO.setup(8, GPIO.IN, pull_up_down = GPIO.PUD_UP)
@@ -22,12 +23,12 @@ try:
             time.sleep(3)
             print("Robot running")
             #Ultrasonic.distance()
-            #Motor.goForward()
-            #Infrared.trackLine()
-            if Ultrasonic.distance() < 30:
-                Motor.StartMoving() #Starts driving forward from begining
-                Infrared.trackLine()  #Turns on line tracking to move down course
-                time.sleep(1)
+            #Motor.StartMoving()
+            Infrared.trackLine()
+            #if Ultrasonic.distance() < 30:
+            #    Motor.StartMoving() #Starts driving forward from begining
+            #    Infrared.trackLine()  #Turns on line tracking to move down course
+            #    time.sleep(1)
             #Motor.pushMarsh()
             #Infrared.trackLine()
             #Motor.goBackward()  #Once at end of course back up to get more room

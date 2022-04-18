@@ -1,11 +1,18 @@
 import time
 import gpiozero
 import Motor
+import RPi.GPIO as GPIO
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
 
 
 line_sensorRight = gpiozero.DigitalInputDevice(19)
 line_sensorLeft = gpiozero.DigitalInputDevice(26)
 Motor.setup()
+
+GPIO.setup(8, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+count = 0
+inputValue = GPIO.input(8)
 
 def trackLine():
     while True:
@@ -21,6 +28,10 @@ def trackLine():
             print("Turn right")
             Motor.turnRight()
             time.sleep(0.5)
+#        elif(inputValue == False):
+#            print("Button pressed")
+#            count = count + 1
+#            time.sleep(0.3)
         else:
             print("Stop")
             Motor.fullStop()
@@ -43,5 +54,5 @@ def trackLineRev():
         else:
             print("Stop")
             Motor.fullStop()
-            break
+            quit()
 
