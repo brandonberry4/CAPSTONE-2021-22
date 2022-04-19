@@ -25,8 +25,6 @@ import numpy as np
 from PIL import Image
 import time
 from threading import Thread
-import Motor
-import RPi.GPIO as GPIO
 
 import sys
 sys.path.insert(0, '/home/pi/Desktop/Capstone/CAPSTONE-2021-22')
@@ -171,7 +169,7 @@ def move_robot():
             if(x_deviation>=tolerance):
                 cmd="Move Left"
                 delay1=get_delay(x_deviation,'l')
-                Motor.turnLeft()
+                
                 ut.left()
                 time.sleep(delay1)
                 ut.stop()
@@ -179,7 +177,7 @@ def move_robot():
             if(x_deviation<=-1*tolerance):
                 cmd="Move Right"
                 delay1=get_delay(x_deviation,'r')
-                Motor.turnRight()
+                
                 ut.right()
                 time.sleep(delay1)
                 ut.stop()
@@ -188,7 +186,7 @@ def move_robot():
             if(y_deviation>=tolerance):
                 cmd="Move Forward"
                 delay1=get_delay(y_deviation,'f')
-                Motor.goForward
+                
                 ut.forward()
                 time.sleep(delay1)
                 ut.stop()
@@ -196,7 +194,7 @@ def move_robot():
             if(y_deviation<=-1*tolerance):
                 cmd="Move Backward"
                 delay1=get_delay(y_deviation,'b')
-                Motor.goBackward
+                
                 ut.back()
                 time.sleep(delay1)
                 ut.stop()
@@ -399,8 +397,5 @@ def draw_overlays(cv2_im, objs, labels, arr_dur, arr_track_data):
     return cv2_im
 
 if __name__ == '__main__':
-    try:
-        app.run(host='0.0.0.0', port=2204, threaded=True) # Run FLASK
-        main()
-    except KeyboardInterrupt:
-        GPIO.cleanup()
+    app.run(host='0.0.0.0', port=2204, threaded=True) # Run FLASK
+    main()

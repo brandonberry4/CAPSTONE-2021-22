@@ -222,11 +222,10 @@ def destroy():
     GPIO.cleanup()
     
 if __name__ == '__main__': # Program start from here
-    # dist = ultrasonic.distance()
     setup()
     print ("Working")
     try:
         while True:
-            turnRight()
+            turnLeft()
     except KeyboardInterrupt:
         destroy()
