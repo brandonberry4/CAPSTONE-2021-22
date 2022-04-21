@@ -29,10 +29,6 @@ def trackLine():
             print("Turn right")
             Motor.turnRight()
             time.sleep(0.5)
-#        elif(inputValue == False):
-#            print("Button pressed")
-#            count = count + 1
-#            time.sleep(0.3)
         else:
             print("Stop")
             Motor.fullStop()
