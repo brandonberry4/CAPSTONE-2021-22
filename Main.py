@@ -25,23 +25,11 @@ try:
                 Motor.fullStop()
                 time.sleep(2)
                 Infrared.trackLine()
-##                if Ultrasonic.distance() > 10:
-##                    Infrared.trackLine()  #Turns on line tracking to move down course
-##                    time.sleep(1)
-##                #elif Ultrasonic.distance() > 80:
-##                #    Motor.pushMarsh()
-##                #    time.sleep(1)
-##                #Infrared.trackLine()
-#                time.sleep(2)
                 Motor.goBackward()
                 time.sleep(2)
                 Infrared.trackLineRev()
                 time.sleep(1)
                 Motor.goHome()
-#                while Ultrasonic.distance() > 10:
-#                      #Once at end of course back up to get more room
-#                    Infrared.trackLineRev()
-#                Motor.goHome()
             elif count == 2:
                 print("Reset")
                 Motor.setup()
