@@ -5,7 +5,7 @@ GPIO.setwarnings(False)
 
 TRIG = 21 #Board 40
 ECHO = 20 #Board 38
-maxTime = 0.02
+maxTime = 0.01
 total = 0
 count = 0
 distance = 0
@@ -25,7 +25,7 @@ def distance():
     starttime = time.time()
     for i in range(10):
         GPIO.output(TRIG, True)
-        time.sleep(0.00001)
+        time.sleep(0.000001)
         GPIO.output(TRIG, False)
 
         pulse_start = time.time()

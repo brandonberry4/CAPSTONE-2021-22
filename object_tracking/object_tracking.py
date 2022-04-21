@@ -48,7 +48,8 @@ x_deviation=0
 y_deviation=0
 arr_track_data=[0,0,0,0,0,0]
 
-arr_valid_objects=['cup', 'tape', 'ball', 'book']
+arr_valid_objects=['cup', 'tape', 'ball', 'book', 'backpack', 'frisbee', 'bottle', 'bowl', 'chair', 'couch', 'pot_plant', 'toilet'
+                   , 'refrigerator']
 
 #---------Flask----------------------------------------
 from flask import Flask, Response

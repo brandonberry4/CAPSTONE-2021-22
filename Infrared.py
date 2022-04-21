@@ -1,6 +1,7 @@
 import time
 import gpiozero
 import Motor
+import Ultrasonic
 import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -38,20 +39,20 @@ def trackLine():
             break
         
 def trackLineRev():
-    while True:
+    while Ultrasonic.distance() > 35:
         if line_sensorRight.is_active == True and line_sensorLeft.is_active == True:
             print("On track")
             Motor.goBackward()
             time.sleep(0.5)
         elif line_sensorRight.is_active == False and line_sensorLeft.is_active == True: #turn left
             print("Turn left")
-            Motor.turnLeft()
+            Motor.turnRightRev()
             time.sleep(0.5)
         elif line_sensorRight.is_active == True and line_sensorLeft.is_active == False: #turn right
             print("Turn right")
-            Motor.turnRight()
+            Motor.turnLeftRev()
             time.sleep(0.5)
-        else:
+        elif Ultrasonic.distance() < 35:
             print("Stop")
             Motor.fullStop()
             quit()

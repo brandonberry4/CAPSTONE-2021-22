@@ -52,10 +52,10 @@ def StartMoving():
     GPIO.output(Motor5,GPIO.LOW)
     GPIO.output(Motor6,GPIO.HIGH)
     print ("Forward")
-    sleep(2)
+    sleep(1.65)
     
-    p1.ChangeDutyCycle(60)
-    p2.ChangeDutyCycle(60)
+    p1.ChangeDutyCycle(56)
+    p2.ChangeDutyCycle(56)
     print("Pivot Right")
     GPIO.output(Motor1,GPIO.HIGH)
     GPIO.output(Motor2,GPIO.LOW)
@@ -63,7 +63,8 @@ def StartMoving():
     GPIO.output(Motor4,GPIO.LOW)
     GPIO.output(Motor5,GPIO.HIGH)
     GPIO.output(Motor6,GPIO.HIGH)
-    sleep(1.2)
+    sleep(1.35)
+    
     
 def TurnAround():
     #p1.ChangeDutyCycle(20)
@@ -85,8 +86,8 @@ def goForward():
     #p1.ChangeDutyCycle(10)
     #p2.ChangeDutyCycle(10)
     #sleep(0.3)
-    p1.ChangeDutyCycle(25)
-    p2.ChangeDutyCycle(25)
+    p1.ChangeDutyCycle(34)
+    p2.ChangeDutyCycle(34)
     print("going forward")
     GPIO.output(Motor1,GPIO.HIGH)
     GPIO.output(Motor2,GPIO.LOW)
@@ -100,8 +101,8 @@ def goBackward():
     #p1.ChangeDutyCycle(10)
     #p2.ChangeDutyCycle(10)
     #sleep(0.3)
-    p1.ChangeDutyCycle(25)
-    p2.ChangeDutyCycle(25)
+    p1.ChangeDutyCycle(20)
+    p2.ChangeDutyCycle(20)
     print("going backward")
     GPIO.output(Motor1,GPIO.LOW)
     GPIO.output(Motor2,GPIO.HIGH)
@@ -131,7 +132,7 @@ def stopRight():
     #GPIO.output(Motor6,GPIO.LOW)
 
 def turnLeft():
-    p2.ChangeDutyCycle(30)
+    p2.ChangeDutyCycle(50)
     print("Turning left")
     GPIO.output(Motor1,GPIO.LOW)
     GPIO.output(Motor2,GPIO.LOW)
@@ -141,7 +142,7 @@ def turnLeft():
     GPIO.output(Motor6,GPIO.HIGH)
     
 def turnRight():
-    p1.ChangeDutyCycle(30)
+    p1.ChangeDutyCycle(50)
     print("Turning right")
     GPIO.output(Motor1,GPIO.HIGH)
     GPIO.output(Motor2,GPIO.LOW)
@@ -191,33 +192,50 @@ def pushMarsh():
     sleep(0.7)
     
 def goHome():
-    p1.ChangeDutyCycle(60)
-    p2.ChangeDutyCycle(60)
-    print("Pivot Left")
-    GPIO.output(Motor1,GPIO.LOW)
-    GPIO.output(Motor2,GPIO.HIGH)
+    
+    p1.ChangeDutyCycle(56)
+    p2.ChangeDutyCycle(56)
+    print("Pivot Right")
+    GPIO.output(Motor1,GPIO.HIGH)
+    GPIO.output(Motor2,GPIO.LOW)
+    GPIO.output(Motor3,GPIO.HIGH)
+    GPIO.output(Motor4,GPIO.LOW)
+    GPIO.output(Motor5,GPIO.HIGH)
+    GPIO.output(Motor6,GPIO.HIGH)
+    sleep(1.72)
+
+    p1.ChangeDutyCycle(35)
+    p2.ChangeDutyCycle(35)
+    GPIO.output(Motor1,GPIO.HIGH)
+    GPIO.output(Motor2,GPIO.LOW)
     GPIO.output(Motor3,GPIO.HIGH)
     GPIO.output(Motor4,GPIO.HIGH)
     GPIO.output(Motor5,GPIO.LOW)
     GPIO.output(Motor6,GPIO.HIGH)
-    sleep(1.2)
+    print ("Forward")
+    sleep(1.4)
+    quit()
     
-    print("Moving backwards")
-    p1.ChangeDutyCycle(30)
+def turnRightRev():
     p2.ChangeDutyCycle(30)
+    print("Turning right backwards")
+    GPIO.output(Motor1,GPIO.LOW)
+    GPIO.output(Motor2,GPIO.HIGH)
+    GPIO.output(Motor3,GPIO.LOW)
+    GPIO.output(Motor4,GPIO.LOW)
+    GPIO.output(Motor5,GPIO.HIGH)
+    GPIO.output(Motor6,GPIO.LOW)
+    
+def turnLeftRev():
+    p1.ChangeDutyCycle(30)
+    print("Turning left backwards")
     GPIO.output(Motor1,GPIO.LOW)
     GPIO.output(Motor2,GPIO.HIGH)
     GPIO.output(Motor3,GPIO.HIGH)
     GPIO.output(Motor4,GPIO.LOW)
     GPIO.output(Motor5,GPIO.HIGH)
-    GPIO.output(Motor6,GPIO.HIGH)
-    print ("Back")
-    sleep(2)
-    
-    
-    
-    
-    
+    GPIO.output(Motor6,GPIO.LOW)    
+        
 def destroy():
     GPIO.cleanup()
     
@@ -227,6 +245,9 @@ if __name__ == '__main__': # Program start from here
     print ("Working")
     try:
         while True:
-            turnRight()
+            #turnRight()
+            #turnLeft()
+            turnLeftRev()
+            #turnRightRev()
     except KeyboardInterrupt:
-        destroy()
+        GPIO.cleanup()

@@ -19,28 +19,32 @@ try:
             print("Button pressed")
             count = count + 1
             if count == 1:
-                time.sleep(2)
-                Motor.goForward()
                 print("Robot running")
-#            #Ultrasonic.distance()
-#            #Motor.StartMoving()
-#            #Infrared.trackLine()
-#            #if Ultrasonic.distance() < 30:
-#            #    Motor.StartMoving() #Starts driving forward from begining
-#            #    Infrared.trackLine()  #Turns on line tracking to move down course
-#            #    time.sleep(1)
-#            #Motor.pushMarsh()
-#            #Infrared.trackLine()
-#            Motor.goBackward()  #Once at end of course back up to get more room
-#            #Motor.TurnAround()  #Turns around
-#            #Infrared.trackLine()  #Line track back to beginning
-#            #if Ultrasonic.distance1() < 20:
-#            #    Infrared.trackLineRev()
-#            #Motor.goHome()
-            elif count == 3:
+                time.sleep(5)
+                Motor.StartMoving() #Starts driving forward from begining
+                Motor.fullStop()
+                time.sleep(2)
+                Infrared.trackLine()
+##                if Ultrasonic.distance() > 10:
+##                    Infrared.trackLine()  #Turns on line tracking to move down course
+##                    time.sleep(1)
+##                #elif Ultrasonic.distance() > 80:
+##                #    Motor.pushMarsh()
+##                #    time.sleep(1)
+##                #Infrared.trackLine()
+#                time.sleep(2)
+                Motor.goBackward()
+                time.sleep(2)
+                Infrared.trackLineRev()
+                time.sleep(1)
+                Motor.goHome()
+#                while Ultrasonic.distance() > 10:
+#                      #Once at end of course back up to get more room
+#                    Infrared.trackLineRev()
+#                Motor.goHome()
+            elif count == 2:
                 print("Reset")
                 Motor.setup()
                 count = 0
-                GPIO.cleanup()
-        
-        
+except KeyboardInterrupt:
+    quit()
